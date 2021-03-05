@@ -18,7 +18,7 @@ namespace YardiksValheimMod
         {
             context = this;
             modEnabled = Config.Bind("General", "Enabled", true, "Enable this mod");
-            
+            ValheimSnapMod.Settings.Init(Config);
             if (!modEnabled.Value)
                 return;
 
