@@ -18,7 +18,7 @@ namespace YardiksValheimMod
         {
             context = this;
             modEnabled = Config.Bind("General", "Enabled", true, "Enable this mod");
-
+            
             if (!modEnabled.Value)
                 return;
 
@@ -47,7 +47,7 @@ namespace YardiksValheimMod
             static void Postfix(Player __instance,
                 GameObject ___m_placementGhost)
             {
-                if (Input.GetKeyDown(KeyCode.RightControl))
+                if (Input.GetKeyDown(ValheimSnapMod.Settings.SnapSettings.EnableModKey.Value))
                 {
                     modifiedPlacementToggled = !modifiedPlacementToggled;
                 }
@@ -78,12 +78,12 @@ namespace YardiksValheimMod
                         currentSourceParent = sourcePiece.transform;
                     }
 
-                    if (Input.GetKeyDown(KeyCode.LeftControl))
+                    if (Input.GetKeyDown(ValheimSnapMod.Settings.SnapSettings.IterateSourceSnapPoints.Value))
                     {
                         currentSourceSnap++;
                     }
 
-                    if (Input.GetKeyDown(KeyCode.LeftAlt))
+                    if (Input.GetKeyDown(ValheimSnapMod.Settings.SnapSettings.IterateDestinationSnapPoints.Value))
                     {
                         currentDestinationSnap++;
                     }
@@ -132,116 +132,6 @@ namespace YardiksValheimMod
 
                 points.Add(piece.transform);
                 return points;
-            }
-        }
-
-        //Patch snap points to be iterable
-        //[HarmonyPatch(typeof(Player), "FindClosestSnapPoints")]
-        static class FindClosestSnapPoints_Patch
-        {
-            private static Transform currentParent;
-            private static Transform currentSelectedChild;
-            private static Transform currentSelectedSource;
-            private static int currentTargetChild = -1;
-            private static int currentSourceSnap = -1;
-
-            static void Postfix(Player __instance,
-                ref Transform a,
-                ref Transform b,
-                ref bool __result)
-            {
-                if (!modEnabled.Value)
-                {
-                    return;
-                }
-
-                if (b == null || a == null)
-                {
-                    Debug.Log($"Not running: b: {b} and a: {a}");
-                    return;
-                }
-
-                var targetParent = b.parent;
-                var sourceParent = a.parent;
-
-                if (currentParent != targetParent)
-                {
-                    currentSelectedChild = null;
-                    currentSelectedSource = null;
-                    currentTargetChild = -1;
-                    currentSourceSnap = -1;
-                }
-
-                if (b.parent == null)
-                {
-                    Debug.Log("B parent is null");
-                    return;
-                }
-
-                if (Input.GetKeyDown(KeyCode.LeftControl))
-                {
-                    currentTargetChild++;
-                    var targetChildren = new List<Transform>();
-                    for (var i = 0; i < targetParent.transform.childCount; i++)
-                    {
-                        var c = targetParent.transform.GetChild(i);
-                        if (c.name.Contains("snap"))
-                        {
-                            Debug.Log($"Adding snap: {c.name}");
-                            targetChildren.Add(c);
-                        }
-                    }
-
-                    if (currentTargetChild >= targetChildren.Count)
-                    {
-                        currentTargetChild = 0;
-                    }
-
-                    Debug.Log($"Switching child to {currentTargetChild}");
-                    b = targetChildren[currentTargetChild];
-                    currentSelectedChild = targetChildren[currentTargetChild];
-                    currentParent = targetParent;
-                    Debug.Log("B is " + b.name);
-                }
-                else
-                {
-                    if (currentSelectedChild != null)
-                    {
-                        b = currentSelectedChild;
-                    }
-                }
-
-                if (Input.GetKeyDown(KeyCode.LeftAlt))
-                {
-                    currentSourceSnap++;
-                    var sourceChildren = new List<Transform>();
-                    for (var i = 0; i < sourceParent.transform.childCount; i++)
-                    {
-                        var c = sourceParent.transform.GetChild(i);
-                        if (c.name.Contains("snap"))
-                        {
-                            Debug.Log($"Adding snap: {c.name}");
-                            sourceChildren.Add(c);
-                        }
-                    }
-
-                    if (currentSourceSnap >= sourceChildren.Count)
-                    {
-                        currentSourceSnap = 0;
-                    }
-
-                    Debug.Log($"Switching source to {currentSourceSnap}");
-                    a = sourceChildren[currentSourceSnap];
-                    currentSelectedSource = sourceChildren[currentSourceSnap];
-                    Debug.Log("B is " + b.name);
-                }
-                else
-                {
-                    if (currentSelectedSource != null)
-                    {
-                        a = currentSelectedSource;
-                    }
-                }
             }
         }
     }
