@@ -19,13 +19,13 @@ namespace ValheimSnapMod
             {
                 string name = "SnapSettings";
                 EnableModKey = config.Bind(name, "EnableModKey", KeyCode.RightControl,
-                    "What key to press to send map to target?");
+                    "This key will enable or disable the Snap mod.");
 
                 IterateSourceSnapPoints = config.Bind(name, "IterateSourceSnapPoints", KeyCode.LeftControl,
-                    "What key to press to accept a sent map?");
+                    "This key will cycle through the snap points on the piece you are placing.");
 
                 IterateDestinationSnapPoints = config.Bind(name, "IterateDestinationSnapPoints", KeyCode.LeftAlt,
-                    "What key to press to reject a sent map?");
+                    "This key will cycle through the snap points on the piece you are attaching to.");
 
                 Debug.Log($"Loaded settings!\nEnableModKey: {EnableModKey.Value}\nIterateSourceSnapPoints:{IterateSourceSnapPoints.Value}\nIterateDestinationSnapPoints:{IterateDestinationSnapPoints.Value}");
             }

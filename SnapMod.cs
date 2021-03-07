@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace YardiksValheimMod
 {
-    [BepInPlugin("yardik.SnapMod", "Yardiks Valheim SnapMod", "1.0.0")]
+    [BepInPlugin("yardik.SnapPointsMadeEasy", "Snap Points Made Easy", "1.1.1")]
     public class SnapMod : BaseUnityPlugin
     {
         private static SnapMod context;
