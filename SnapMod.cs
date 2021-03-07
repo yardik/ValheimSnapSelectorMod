@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace YardiksValheimMod
 {
-    [BepInPlugin("yardik.SnapPointsMadeEasy", "Snap Points Made Easy", "1.1.1")]
+    [BepInPlugin("yardik.SnapPointsMadeEasy", "Snap Points Made Easy", "1.1.2")]
     public class SnapMod : BaseUnityPlugin
     {
         private static SnapMod context;
@@ -39,8 +39,8 @@ namespace YardiksValheimMod
         static class UpdatePlacementGhost_Patch
         {
             static bool modifiedPlacementToggled = false;
-            private static int currentSourceSnap = -1;
-            private static int currentDestinationSnap = -1;
+            private static int currentSourceSnap = 0;
+            private static int currentDestinationSnap = 0;
             private static Transform currentDestinationParent;
             private static Transform currentSourceParent;
 
@@ -68,13 +68,15 @@ namespace YardiksValheimMod
                 {
                     if (currentDestinationParent != targetPiece.transform)
                     {
-                        currentDestinationSnap = 0;
+                        if (ValheimSnapMod.Settings.SnapSettings.ResetSnapsOnChangePiece.Value || currentDestinationSnap < 0)
+                            currentDestinationSnap = 0;
                         currentDestinationParent = targetPiece.transform;
                     }
 
                     if (currentSourceParent != sourcePiece.transform)
                     {
-                        currentSourceSnap = 0;
+                        if (ValheimSnapMod.Settings.SnapSettings.ResetSnapsOnChangePiece.Value || currentSourceSnap < 0)
+                            currentSourceSnap = 0;
                         currentSourceParent = sourcePiece.transform;
                     }
 

@@ -15,6 +15,8 @@ namespace ValheimSnapMod
             public static ConfigEntry<KeyCode> EnableModKey { get; private set; }
             public static ConfigEntry<KeyCode> IterateSourceSnapPoints { get; private set; }
             public static ConfigEntry<KeyCode> IterateDestinationSnapPoints { get; private set; }
+            public static ConfigEntry<bool> ResetSnapsOnChangePiece { get; private set; }
+            
             public static void Init(ConfigFile config)
             {
                 string name = "SnapSettings";
@@ -27,6 +29,9 @@ namespace ValheimSnapMod
                 IterateDestinationSnapPoints = config.Bind(name, "IterateDestinationSnapPoints", KeyCode.LeftAlt,
                     "This key will cycle through the snap points on the piece you are attaching to.");
 
+                ResetSnapsOnChangePiece = config.Bind(name, "ResetSnapsOnChangePiece", false,
+                    "Controls if the selected snap point is reset for each placement, default to not reset. This means your selections carry over between placements.");
+                
                 Debug.Log($"Loaded settings!\nEnableModKey: {EnableModKey.Value}\nIterateSourceSnapPoints:{IterateSourceSnapPoints.Value}\nIterateDestinationSnapPoints:{IterateDestinationSnapPoints.Value}");
             }
         }
